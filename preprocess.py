@@ -2,8 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-image = cv2.imread('data/image_1926_9.png')
-
+image = cv2.imread('data/image_2897_1.png')
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 blur = cv2.GaussianBlur(gray, (9, 9), 3)
 img = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
@@ -27,6 +26,7 @@ for contour in contours:
         if area > largest_contour:
             largest_contour = area
 
+print(largest_contour)
 
 for contour in center_contours:
     area = cv2.contourArea(contour)

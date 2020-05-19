@@ -152,6 +152,6 @@ def create_dataset(images, skip_zero=False, count=0):
         else: 
             count = 0
 
-create_dataset(get_images('images_v3/'))
+create_dataset(get_images('images_v2/'))
 
 # display_images('images/')

@@ -11,14 +11,14 @@ import glob
 import random
 import copy
 import time
+from tqdm import tqdm
+
+import tkinter as tk
+from tkinter import filedialog
 
 import tensorflow as tf
 import tensorflow.keras
 from tensorflow.keras.models import load_model
-
-config = tf.compat.v1.ConfigProto()
-config.gpu_options.allow_growth = True
-sess = tf.compat.v1.Session(config=config)
 
 #? -----------------
 #? --- FUNCTIONS ---
@@ -48,13 +48,14 @@ def prepare_image(image):
     blur = cv2.GaussianBlur(gray, (9, 9), 3)
     tresh = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
     result = cv2.bitwise_not(tresh, tresh)
-
-    contours, _ = cv2.findContours(result.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-
+    
     # Remove small noise
     kernel = np.ones((3, 3), np.uint8) 
     result = cv2.erode(result, kernel)
     result = cv2.dilate(result, kernel)
+
+    contours, _ = cv2.findContours(result.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
 
     dist = []
 
@@ -69,7 +70,7 @@ def prepare_image(image):
         closest_pnt.append(min(points))
 
     for contour in contours:
-        if cv2.contourArea(contour) < 50:
+        if cv2.contourArea(contour) < 250:
             cv2.fillPoly(result, pts=[contour], color=(0,0,0))
             continue
 
@@ -119,17 +120,21 @@ def predict_numbers(image, model):
     sq_height = int(image.shape[1] / 9)
 
     # Loop trough all numbers, do some preprocessing and predict the number
-    sudoku = []
+    sudoku = [[0 for i in range(9)] for j in range(9)]
     for i in range(9):
-        row = []
+        # row = []
         for j in range(9):
             crop_img = image[i*sq_height:i*sq_height+sq_height, j*sq_width:j*sq_width+sq_width]
             crop_img = cv2.resize(crop_img, (100, 100))
             crop_img = prepare_image(crop_img)
-            prediction = model.predict_classes(np.array(crop_img).reshape(1, 100, 100, 1))[0]
-            row.append(prediction)
 
-        sudoku.append(row)   
+            predictions = model.predict_proba(np.array(crop_img).reshape(1, 100, 100, 1))[0]
+            prediction = np.argmax(predictions, axis=0)
+            confidence = predictions[prediction]
+
+            if confidence > 0.70:
+                if validate(j, i, prediction, sudoku):
+                    sudoku[i][j] = prediction
 
     return sudoku
 
@@ -209,35 +214,46 @@ if __name__ == '__main__':
     # Load Keras model
     model = load_model('models/number_classifier_v1.0.hdf5')
 
-    # Read image of sudoku and resize
-    image = cv2.imread('images_v2/IMG_20200505_203042.jpg')
-    image = cv2.resize(image, (720, 720))
+    root = tk.Tk()
+    root.withdraw()
 
-    print('Starting...')
-    start = time.time()
+    file_paths = filedialog.askopenfilenames()
 
-    # Some preprocessing to eliminate everything but the sudoku from the picture
-    preprocessed_image = preprocess_image(image)
-    corners = find_corners(preprocessed_image)
-    result = four_point_transform(corners, image)
+    for file in file_paths:
+        # Read image of sudoku and resize
+        image = cv2.imread(file)
+        image = cv2.resize(image, (720, 720))
 
-    # Loop trough every row and predict numbers
-    sudoku = predict_numbers(result, model)
-    print_sudoku(sudoku)
-    print('\n-----------------------')
-    print('\nsolving sudoku ...\n')
+        # print('Starting...')
+        start = time.time()
 
-    # Solving predicted sudoku
-    board = copy.deepcopy(sudoku)
-    solve(board)
+        # Some preprocessing to eliminate everything but the sudoku from the picture
+        preprocessed_image = preprocess_image(image)
+        corners = find_corners(preprocessed_image)
+        result = four_point_transform(corners, image)
 
-    print_sudoku(board)
+        # Loop trough every row and predict numbers
+        sudoku = predict_numbers(result, model)
+        end = time.time()
+        print(f'\nScanning sudoku took: {end-start}')
+
+        print_sudoku(sudoku)
+        print('\n-----------------------')
+        print('\nsolving sudoku ...\n')
+
+        start = time.time()
+        # Solving predicted sudoku
+        board = copy.deepcopy(sudoku)
+        if solve(board) == False:
+            print('SUDOKU CANT BE SOLVED!')
+
+        end = time.time()
+        print(f'\nSolving sudoku took: {end-start}')
+        print_sudoku(board)
     
-    end = time.time()
-    print(f'\nTotal time: {end-start}')
 
 
-    cv2.imshow('Result', result)
+        cv2.imshow('Result', result)
 
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
