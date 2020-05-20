@@ -1,0 +1,13 @@
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\bin\Debug\netcoreapp3.1\test_model.exe
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\bin\Debug\netcoreapp3.1\test_model.deps.json
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\bin\Debug\netcoreapp3.1\test_model.runtimeconfig.json
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\bin\Debug\netcoreapp3.1\test_model.runtimeconfig.dev.json
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\bin\Debug\netcoreapp3.1\test_model.dll
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\bin\Debug\netcoreapp3.1\test_model.pdb
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\obj\Debug\netcoreapp3.1\test_model.vbprojAssemblyReference.cache
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\obj\Debug\netcoreapp3.1\test_model.vbproj.CoreCompileInputs.cache
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\obj\Debug\netcoreapp3.1\test_model.AssemblyInfoInputs.cache
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\obj\Debug\netcoreapp3.1\test_model.AssemblyInfo.vb
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\obj\Debug\netcoreapp3.1\test_model.dll
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\obj\Debug\netcoreapp3.1\test_model.pdb
+C:\Users\vande\OneDrive\Documents\09_Projects\sudoku_solver\app\test_model\test_model\obj\Debug\netcoreapp3.1\test_model.genruntimeconfig.cache

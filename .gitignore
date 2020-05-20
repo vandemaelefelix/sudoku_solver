@@ -1,7 +1,4 @@
-images/
-images_v3/
-images_v2/
-data/
+python_code/data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
